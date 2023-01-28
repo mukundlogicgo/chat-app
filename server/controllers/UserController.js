@@ -17,6 +17,38 @@ export const getUser = async (req, res) => {
     res.status(500).json(error);
   }
 };
+export const getUserByName = async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const user = await UserModel.findOne({ username });
+    if (!user) {
+      return res.status(404).json("User not found");
+    }
+    return res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+export const createUser = async (req, res) => {
+  const { username } = req.body
+
+  try {
+    const existUser = await UserModel.findOne({ username })
+
+    if (!existUser) {
+      const user = await UserModel.create({ username });
+      return res.status(200).json(user)
+    }
+
+    return res.status(200).json(existUser)
+
+  } catch (error) {
+    res.status(500).json(error);
+  }
+
+}
 
 
 
