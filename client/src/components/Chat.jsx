@@ -14,7 +14,32 @@ const Chat = ({
   const [user, setUser] = useState({});
   const [online, setOnline] = useState(false)
 
-  console.log(onlineUsers);
+  // find freind id from chat and set user
+  useEffect(() => {
+    chat &&
+      (async () => {
+        try {
+
+          const friendId = chat.members.find((id) => id !== currentUser._id);
+
+          const { data: user } = await axios.get(
+            `${REACT_APP_SERVER_BASE_URL}/user/${friendId}`
+          );
+          setUser(user);
+        } catch (error) {
+          console.log("[ERROR]", error?.response?.data);
+        }
+      })();
+  }, []);
+
+  // check is user online or not
+  useEffect(() => {
+    if (user.username) {
+      const isOnline = onlineUsers.some(u => u.userId === user._id)
+      setOnline(isOnline)
+    }
+
+  }, [onlineUsers, user])
 
   const handleOnSelect = async (e) => {
     e.preventDefault();
@@ -31,30 +56,6 @@ const Chat = ({
     }
 
   };
-
-  useEffect(() => {
-    const isOnline = onlineUsers.some(u => u.userId === user._id)
-    setOnline(isOnline)
-  }, [onlineUsers])
-
-
-  useEffect(() => {
-    chat &&
-      (async () => {
-        try {
-          // find freind id from chat
-          const friendId = chat.members.find((id) => id !== currentUser._id);
-
-          const { data: user } = await axios.get(
-            `${REACT_APP_SERVER_BASE_URL}/user/${friendId}`
-          );
-
-          setUser(user);
-        } catch (error) {
-          console.log("[ERRO]", error?.response?.data);
-        }
-      })();
-  }, []);
 
   return (
     <button

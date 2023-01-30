@@ -30,15 +30,9 @@ const Home = ({ username }) => {
 
   const scrollDivRef = useRef();
 
-
   const handleSetChatId = (chatId) => {
     setChatId(chatId);
   };
-
-  // useEffect(() => {
-  //   console.log(onlineUsers)
-  // }, [onlineUsers])
-
 
   useEffect(() => {
     scrollDivRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -49,7 +43,10 @@ const Home = ({ username }) => {
     currentUser?.username && socket.emit("new-user-add", currentUser._id);
 
     socket.on("get-users", (users) => {
-      setOnlineUsers(users);
+      setOnlineUsers(prevUsers => [
+        ...users
+      ]);
+      console.log("new user came.");
     });
 
     socket.on("connect_error", (err) => {
@@ -149,6 +146,7 @@ const Home = ({ username }) => {
                     <Chat
                       key={index}
                       chat={chat}
+                      chats={chats}
                       currentUser={currentUser}
                       handleSetChatId={handleSetChatId}
                       slectedChat={slectedChat}

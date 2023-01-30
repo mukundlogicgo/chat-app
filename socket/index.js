@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
     activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
 
     // send all active users to all users
-    socket.emit("get-users", activeUsers);
+    io.emit("get-users", activeUsers);
   });
 
   socket.on("connect_error", (err) => {
