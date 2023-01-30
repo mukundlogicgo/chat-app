@@ -13,25 +13,28 @@ const SelectFileButton = () => {
   const handleFileUpload = async (e) => {
     e.preventDefault()
 
-    const formData = new FormData();
-
-    for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i]);
-    }
-
     try {
+      const formData = new FormData();
+
+      for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i]);
+      }
+
       const { data } = await axios.post(`${REACT_APP_SERVER_BASE_URL}/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
       })
 
-      console.log("data", data)
+      data.data.forEach(el => {
+        console.log(`${el.filename}:${el.fileURL}`)
+      });
+
+      setFiles(null)
 
     } catch (error) {
       setFiles(null)
       console.log("[ERROR]", error.message);
-      alert(error.response.data)
     }
   }
 

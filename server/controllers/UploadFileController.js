@@ -5,7 +5,7 @@ export const uploadFile = async (req, res) => {
 
         const files = req.files
         console.log("files", files);
-        if (!files) return res.status(400).json("File is required.")
+        if (!files || !files?.length) return res.status(400).json("File is required.")
 
         const paths = files.map(file => {
             return {
