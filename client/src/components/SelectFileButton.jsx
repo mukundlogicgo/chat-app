@@ -1,18 +1,42 @@
 import React, { useRef, useState } from "react";
 import ConfirmationPopUp from "./FileUpload/ConfirmationPopUp";
+import axios from "axios"
+
+export const { REACT_APP_SERVER_BASE_URL, REACT_APP_SOCKET_SERVER_BASE_URL } =
+  process.env;
 
 const SelectFileButton = () => {
-  const [files, setFiles] = useState(null)
+  const [files, setFiles] = useState()
 
   const inputFile = useRef(null)
 
-  const handleFileUpload = () => {
+  const handleFileUpload = async (e) => {
+    e.preventDefault()
 
-    console.log("file uploading...");
-    setFiles(null)
+    const formData = new FormData();
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+    }
+
+    try {
+      const { data } = await axios.post(`${REACT_APP_SERVER_BASE_URL}/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+
+      console.log("data", data)
+
+    } catch (error) {
+      setFiles(null)
+      console.log("[ERROR]", error.message);
+      alert(error.response.data)
+    }
   }
 
   const handleFileChange = (e) => {
+    setFiles(null)
     setFiles(e.target.files)
   }
 

@@ -78,7 +78,7 @@ const Home = ({ username }) => {
     (async () => {
       try {
         // get current user by username
-        const { data: currentUser, status } = await axios.get(
+        const { data: currentUser } = await axios.get(
           `${REACT_APP_SERVER_BASE_URL}/user/name/${username}`
         );
         setCurrentUser(currentUser);
@@ -92,7 +92,7 @@ const Home = ({ username }) => {
         console.log("[ERROR]", error?.response?.data);
       }
     })();
-  }, []);
+  }, [username]);
 
   // receiving message from user
   useEffect(() => {
