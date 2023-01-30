@@ -24,8 +24,8 @@ const Home = ({ username }) => {
 
   const [messages, setMessages] = useState([]);
   const [sendMessage, setSendMessage] = useState({});
-
   const [currentText, setCurrentText] = useState("");
+
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   const scrollDivRef = useRef();
@@ -46,7 +46,6 @@ const Home = ({ username }) => {
       setOnlineUsers(prevUsers => [
         ...users
       ]);
-      console.log("new user came.");
     });
 
     socket.on("connect_error", (err) => {

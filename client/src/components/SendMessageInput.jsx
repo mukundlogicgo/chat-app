@@ -1,8 +1,11 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import SelectEmoji from "./SelectEmoji";
 import SelectFileButton from "./SelectFileButton";
 import SendButton from "./SendButton";
+
+
+const { REACT_APP_SERVER_BASE_URL } = process.env;
 
 const SendMessageInput = ({
   currentText,
@@ -13,7 +16,8 @@ const SendMessageInput = ({
   slectedChat,
   setSendMessage,
 }) => {
-  const { REACT_APP_SERVER_BASE_URL } = process.env;
+
+
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -60,7 +64,12 @@ const SendMessageInput = ({
             placeholder="Enter your message here...."
             className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
           />
-          <SelectEmoji />
+
+          <SelectEmoji
+            currentText={currentText}
+            setCurrentText={setCurrentText}
+          />
+
         </div>
       </div>
 

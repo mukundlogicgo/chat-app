@@ -1,9 +1,36 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import ConfirmationPopUp from "./FileUpload/ConfirmationPopUp";
 
 const SelectFileButton = () => {
+  const [files, setFiles] = useState(null)
+
+  const inputFile = useRef(null)
+
+  const handleFileUpload = () => {
+
+    console.log("file uploading...");
+    setFiles(null)
+  }
+
+  const handleFileChange = (e) => {
+    setFiles(e.target.files)
+  }
+
+  const handleSelectFileClick = (e) => {
+    inputFile.current.click();
+  }
+
+
   return (
     <>
-      <button className="flex items-center justify-center text-gray-400 hover:text-gray-600">
+      <input
+        type='file'
+        ref={inputFile}
+        className="hidden"
+        onChange={handleFileChange}
+        multiple={true}
+      />
+      <button onClick={handleSelectFileClick} className="flex items-center justify-center text-gray-400 hover:text-gray-600">
         <svg
           className="w-5 h-5"
           fill="none"
@@ -19,6 +46,13 @@ const SelectFileButton = () => {
           ></path>
         </svg>
       </button>
+
+      {
+        files?.length > 0 && <ConfirmationPopUp
+          setFiles={setFiles}
+          handleFileUpload={handleFileUpload}
+        />
+      }
     </>
   );
 };
