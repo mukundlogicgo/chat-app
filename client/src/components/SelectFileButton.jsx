@@ -5,7 +5,7 @@ import axios from "axios"
 export const { REACT_APP_SERVER_BASE_URL, REACT_APP_SOCKET_SERVER_BASE_URL } =
   process.env;
 
-const SelectFileButton = () => {
+const SelectFileButton = ({ handleSendMessage, currentText, setCurrentText }) => {
   const [files, setFiles] = useState()
 
   const inputFile = useRef(null)
@@ -26,8 +26,13 @@ const SelectFileButton = () => {
         }
       })
 
-      data.data.forEach(el => {
-        console.log(`${el.filename}:${el.fileURL}`)
+      data.data.forEach(async (el) => {
+        console.log(`${el.filename}:${el.fileURL}`);
+
+        setCurrentText(el.filename + " : " + el.fileURL)
+        console.log("ctext", currentText);
+        await handleSendMessage(e)
+        setCurrentText("")
       });
 
       setFiles(null)

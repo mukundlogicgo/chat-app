@@ -18,10 +18,10 @@ const SendMessageInput = ({
 }) => {
 
 
-
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!currentText) return;
+    console.log("message sent running...", currentText)
 
     const msg = {
       chatId: chatId,
@@ -42,13 +42,18 @@ const SendMessageInput = ({
         (id) => id !== currentUser._id
       );
       setSendMessage({ ...message, receiverId });
+      console.log("message sent successfully")
     } catch (error) {
       console.log("[ERROR]", error.message);
     }
   };
   return (
     <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
-      <SelectFileButton />
+      <SelectFileButton
+        handleSendMessage={handleSendMessage}
+        currentText={currentText}
+        setCurrentText={setCurrentText}
+      />
       <div className="flex-grow ml-4">
         <div className="relative w-full">
           <input
