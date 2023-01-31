@@ -23,6 +23,7 @@ const SendMessageInput = ({
       chatId: chatId,
       senderId: currentUser._id,
       text: currentText,
+      messageType: "text"
     };
 
     try {
@@ -39,9 +40,9 @@ const SendMessageInput = ({
       const receiverId = slectedChat.members.find(
         (id) => id !== currentUser._id
       );
-      
+
       setSendMessage({ ...message, receiverId });
- 
+
     } catch (error) {
       console.log("[ERROR]", error.message);
     }

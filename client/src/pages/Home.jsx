@@ -103,7 +103,6 @@ const Home = ({ username }) => {
           ...data,
         },
       ]);
-      console.log(data)
     });
 
     return () => {

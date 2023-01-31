@@ -11,7 +11,6 @@ const SelectFileButton = ({
   chatId,
   currentUser,
   slectedChat,
-  setSendMessage
 }) => {
   const [files, setFiles] = useState()
 
@@ -38,10 +37,13 @@ const SelectFileButton = ({
       })
 
       data.data.forEach(async (el) => {
+        const messageType = el.filename.split(".")[el.filename.split(".").length - 1]
+
         const msg = {
           chatId: chatId,
           senderId: currentUser._id,
           text: `${el.filename}:${el.fileURL}`,
+          messageType
         };
 
         const { data: message } = await axios.post(
@@ -49,7 +51,10 @@ const SelectFileButton = ({
           msg
         );
 
-        setMessages((prevMessage) => [...prevMessage, message]);
+        setMessages((prevMessage) => [
+          ...prevMessage,
+          message
+        ]);
 
         // send message to socket.
         socket.emit("send-message", { ...message, receiverId });

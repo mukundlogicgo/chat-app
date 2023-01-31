@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 
 
 const Message = ({ isSelf, message, currentUser, slectedChatUser }) => {
-
+  // console.log(message.messageType)
 
   return (
+
     <>
       {isSelf ? (
         <div className="col-start-1 col-end-8 p-3 rounded-lg">
