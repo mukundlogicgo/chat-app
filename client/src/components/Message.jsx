@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { saveAs } from 'file-saver'
 
-const Message = ({ isSelf, message, currentUser}) => {
+const Message = ({ isSelf, message, currentUser, slectedChat }) => {
   const handleDownload = (fileUrl, filename) => {
     saveAs(fileUrl, filename)
   }
@@ -19,7 +19,7 @@ const Message = ({ isSelf, message, currentUser}) => {
             </div>
             <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
               {
-                currentUser._id !== message.senderId && <p>@{message.senderName}</p>
+                slectedChat.isGroupChat && currentUser._id !== message.senderId && <p>@{message.senderName}</p>
               }
               {
                 message.messageType === "mp3" && <audio src={message.text} controls autoPlay={false} />
@@ -50,7 +50,7 @@ const Message = ({ isSelf, message, currentUser}) => {
             </div>
             <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
               {
-                currentUser._id !== message.senderId && <p>@{message.senderName}</p>
+                slectedChat.isGroupChat && currentUser._id !== message.senderId && <p>@{message.senderName}</p>
               }
               {
                 message.messageType === "mp3" && <audio src={message.text} controls autoPlay={false} />

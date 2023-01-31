@@ -17,7 +17,9 @@ export const socket = io(`${REACT_APP_SOCKET_SERVER_BASE_URL}`);
 
 const Home = ({ username, setUsername }) => {
   const [currentUser, setCurrentUser] = useState({});
+
   const [slectedChat, setSlectedChat] = useState({});
+
   const [slectedChatUser, setSlectedChatUser] = useState({});
 
   const [chatId, setChatId] = useState(null);
@@ -33,8 +35,6 @@ const Home = ({ username, setUsername }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   const scrollDivRef = useRef();
-
-
 
   const handleSetChatId = (chatId) => {
     setChatId(chatId);
@@ -122,6 +122,22 @@ const Home = ({ username, setUsername }) => {
     };
   }, []);
 
+  // receiving message from group chat
+  useEffect(() => {
+    socket.on("receive-message-group", (data) => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          ...data,
+        },
+      ]);
+    });
+
+    return () => {
+      socket.off("receive-message-group");
+    };
+  }, []);
+
 
   return (
     <div>
@@ -193,6 +209,7 @@ const Home = ({ username, setUsername }) => {
                             message={msg}
                             currentUser={currentUser}
                             slectedChatUser={slectedChatUser}
+                            slectedChat={slectedChat}
                           />
                         );
                       })}

@@ -20,37 +20,59 @@ const SendMessageInput = ({
   const handleSendMessage = async () => {
     if (!currentText) return;
 
-    const msg = {
-      chatId: chatId,
-      senderName: currentUser.username,
-      senderId: currentUser._id,
-      text: currentText,
-      messageType: "text"
-    };
+
 
     try {
 
-      const { data: message } = await axios.post(
-        `${REACT_APP_SERVER_BASE_URL}/message`,
-        msg
-      );
-
-      setCurrentText("");
-      setMessages((prevMessage) => [...prevMessage, message]);
-
       // send message to socket.
       if (slectedChat.isGroupChat) {
+        const msg = {
+          chatId: chatId,
+          senderName: currentUser.username,
+          senderId: currentUser._id,
+          text: currentText,
+          isGroupChat: true,
+          messageType: "text"
+        };
+
+        const { data: message } = await axios.post(
+          `${REACT_APP_SERVER_BASE_URL}/message`,
+          msg
+        );
+
+        setCurrentText("");
+        setMessages((prevMessage) => [...prevMessage, message]);
+
+
         // get groupname to send message to that group
         const groupName = await axios.get(`${REACT_APP_SERVER_BASE_URL}/chat/group/id/${chatId}`)
-        // if chat is group chat then send message to that chat
 
-        // sending message to that group (TODO add to server)
-        // socket.emit("send-message-group", { ...message, receiverId });
+        // sendig message to socket by groupname
+        socket.emit("send-message-group", { ...message, groupName });
+
       } else {
+        const msg = {
+          chatId: chatId,
+          senderName: currentUser.username,
+          senderId: currentUser._id,
+          text: currentText,
+          isGroupChat: false,
+          messageType: "text"
+        };
+
+        const { data: message } = await axios.post(
+          `${REACT_APP_SERVER_BASE_URL}/message`,
+          msg
+        );
+
+        setCurrentText("");
+        setMessages((prevMessage) => [...prevMessage, message]);
         // if chat is NOT group chat then send message to that chat
         const receiverId = slectedChat.members.find(
           (id) => id !== currentUser._id
         );
+
+
         // sendig message to socket by reciever id
         socket.emit("send-message", { ...message, receiverId });
       }

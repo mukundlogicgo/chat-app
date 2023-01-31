@@ -27,6 +27,17 @@ io.on("connection", (socket) => {
     }
   });
 
+  // send message to a specific group
+  socket.on("send-message-group", (data) => {
+    const { groupName } = data;
+
+    if (groupName) {
+      console.log("msg sent to ", groupName);
+      socket.join(groupName);
+      io.to(groupName).emit("receive-message-group", data);
+    }
+  });
+
   socket.on("disconnect", () => {
     // remove user from active users
     activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
