@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import ConfirmationPopUp from "./FileUpload/ConfirmationPopUp";
 import axios from "axios"
+import { socket } from "../pages/Home";
 
 export const { REACT_APP_SERVER_BASE_URL, REACT_APP_SOCKET_SERVER_BASE_URL } =
   process.env;
@@ -37,7 +38,6 @@ const SelectFileButton = ({
       })
 
       data.data.forEach(async (el) => {
-
         const msg = {
           chatId: chatId,
           senderId: currentUser._id,
@@ -52,7 +52,7 @@ const SelectFileButton = ({
         setMessages((prevMessage) => [...prevMessage, message]);
 
         // send message to socket.
-        setSendMessage({ ...message, receiverId });
+        socket.emit("send-message", { ...message, receiverId });
       });
 
       setFiles(null)

@@ -39,6 +39,7 @@ const SendMessageInput = ({
       const receiverId = slectedChat.members.find(
         (id) => id !== currentUser._id
       );
+      
       setSendMessage({ ...message, receiverId });
  
     } catch (error) {

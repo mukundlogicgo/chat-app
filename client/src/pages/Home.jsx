@@ -113,9 +113,10 @@ const Home = ({ username }) => {
 
   // sending message to user
   useEffect(() => {
-    if (sendMessage?.text) {
-      socket.emit("send-message", sendMessage);
-    }
+    if (!sendMessage?.text) return
+
+    socket.emit("send-message", sendMessage);
+
   }, [sendMessage]);
 
   return (
