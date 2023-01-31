@@ -30,7 +30,7 @@ const Message = ({ isSelf, message, currentUser, slectedChatUser }) => {
                 message.messageType === "png" &&
                 <img
                   onClick={() => handleDownload(message.text, message.text.split("/")[message.text.split("/").length - 1])}
-                  className="object-cover w-full lg:w-40 lg:h-40"
+                  className="object-contain w-full lg:w-40 lg:h-30"
                   src={message.text}
                   alt="image"
                 />
