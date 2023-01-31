@@ -5,20 +5,24 @@ import axios from "axios"
 export const { REACT_APP_SERVER_BASE_URL, REACT_APP_SOCKET_SERVER_BASE_URL } =
   process.env;
 
-const SelectFileButton = ({ handleSendMessage, currentText, setCurrentText }) => {
+const SelectFileButton = ({
+  setMessages,
+  chatId,
+  currentUser
+}) => {
   const [files, setFiles] = useState()
 
   const inputFile = useRef(null)
 
-  const handleFileUpload = async (e) => {
-    e.preventDefault()
-
+  const handleFileUpload = async () => {
     try {
       const formData = new FormData();
 
       for (let i = 0; i < files.length; i++) {
         formData.append("files", files[i]);
       }
+
+      setFiles(null)
 
       const { data } = await axios.post(`${REACT_APP_SERVER_BASE_URL}/upload`, formData, {
         headers: {
@@ -27,12 +31,19 @@ const SelectFileButton = ({ handleSendMessage, currentText, setCurrentText }) =>
       })
 
       data.data.forEach(async (el) => {
-        console.log(`${el.filename}:${el.fileURL}`);
 
-        setCurrentText(el.filename + " : " + el.fileURL)
-        console.log("ctext", currentText);
-        await handleSendMessage(e)
-        setCurrentText("")
+        const msg = {
+          chatId: chatId,
+          senderId: currentUser._id,
+          text: `${el.filename}:${el.fileURL}`,
+        };
+
+        const { data: message } = await axios.post(
+          `${REACT_APP_SERVER_BASE_URL}/message`,
+          msg
+        );
+
+        setMessages((prevMessage) => [...prevMessage, message]);
       });
 
       setFiles(null)

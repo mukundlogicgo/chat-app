@@ -16,12 +16,8 @@ const SendMessageInput = ({
   slectedChat,
   setSendMessage,
 }) => {
-
-
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
+  const handleSendMessage = async () => {
     if (!currentText) return;
-    console.log("message sent running...", currentText)
 
     const msg = {
       chatId: chatId,
@@ -30,10 +26,12 @@ const SendMessageInput = ({
     };
 
     try {
+
       const { data: message } = await axios.post(
         `${REACT_APP_SERVER_BASE_URL}/message`,
         msg
       );
+
       setCurrentText("");
       setMessages((prevMessage) => [...prevMessage, message]);
 
@@ -50,9 +48,10 @@ const SendMessageInput = ({
   return (
     <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
       <SelectFileButton
-        handleSendMessage={handleSendMessage}
-        currentText={currentText}
         setCurrentText={setCurrentText}
+        chatId={chatId}
+        currentUser={currentUser}
+        setMessages={setMessages}
       />
       <div className="flex-grow ml-4">
         <div className="relative w-full">
