@@ -5,6 +5,9 @@ const MessageSchema = new mongoose.Schema(
     chatId: {
       type: String,
     },
+    senderName: {
+      type: String
+    },
     senderId: {
       type: String,
     },

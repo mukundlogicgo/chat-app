@@ -8,6 +8,7 @@ import SendMessageInput from "../components/SendMessageInput";
 import UserProfile from "../components/UserProfile";
 import { io } from "socket.io-client";
 import { useRef } from "react";
+import GroupChat from "../components/GroupChat/GroupChat";
 
 const { REACT_APP_SERVER_BASE_URL, REACT_APP_SOCKET_SERVER_BASE_URL } =
   process.env;
@@ -19,8 +20,11 @@ const Home = ({ username, setUsername }) => {
   const [slectedChat, setSlectedChat] = useState({});
   const [slectedChatUser, setSlectedChatUser] = useState({});
 
-  const [chatId, setChatId] = useState("");
+  const [chatId, setChatId] = useState(null);
+
   const [chats, setChats] = useState([]);
+
+  const [groups, setGroups] = useState([])
 
   const [messages, setMessages] = useState([]);
   const [sendMessage, setSendMessage] = useState({});
@@ -29,6 +33,8 @@ const Home = ({ username, setUsername }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   const scrollDivRef = useRef();
+
+
 
   const handleSetChatId = (chatId) => {
     setChatId(chatId);
@@ -73,7 +79,7 @@ const Home = ({ username, setUsername }) => {
       })();
   }, [chatId]);
 
-  // get user by username and find all chats
+  // get user by username and find all chats with group
   useEffect(() => {
     (async () => {
       try {
@@ -88,6 +94,12 @@ const Home = ({ username, setUsername }) => {
           `${REACT_APP_SERVER_BASE_URL}/chat/${currentUser._id}`
         );
         setChats(chats);
+
+        // get user groups by group name
+        const { data: groups } = await axios.get(
+          `${REACT_APP_SERVER_BASE_URL}/chat/group/user/id/${currentUser._id}`
+        );
+        setGroups(groups)
       } catch (error) {
         console.log("[ERROR]", error?.response?.data);
       }
@@ -110,13 +122,6 @@ const Home = ({ username, setUsername }) => {
     };
   }, []);
 
-  // sending message to user
-  useEffect(() => {
-    if (!sendMessage?.text) return
-
-    socket.emit("send-message", sendMessage);
-
-  }, [sendMessage]);
 
   return (
     <div>
@@ -149,13 +154,24 @@ const Home = ({ username, setUsername }) => {
                       chats={chats}
                       currentUser={currentUser}
                       handleSetChatId={handleSetChatId}
-                      slectedChat={slectedChat}
                       onlineUsers={onlineUsers}
+                      slectedChat={slectedChat}
                       setSlectedChat={setSlectedChat}
                       setSlectedChatUser={setSlectedChatUser}
                     />
                   );
                 })}
+                {
+                  groups.map((grp, index) => {
+                    return <GroupChat
+                      key={index}
+                      group={grp}
+                      setChatId={setChatId}
+                      setSlectedChat={setSlectedChat}
+                      slectedChat={slectedChat}
+                    />
+                  })
+                }
               </div>
             </div>
           </div>

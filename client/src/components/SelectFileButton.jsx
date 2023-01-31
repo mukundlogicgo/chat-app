@@ -42,6 +42,7 @@ const SelectFileButton = ({
         const msg = {
           chatId: chatId,
           senderId: currentUser._id,
+          senderName: currentUser.username,
           text: el.fileURL,
           messageType
         };

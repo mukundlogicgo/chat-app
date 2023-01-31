@@ -13,8 +13,9 @@ const Chat = ({
 
   const [user, setUser] = useState({});
   const [online, setOnline] = useState(false)
+  
 
-  // find freind id from chat and set user
+  // find friend id from chat and set user
   useEffect(() => {
     chat &&
       (async () => {

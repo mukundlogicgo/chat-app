@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { socket } from "../pages/Home";
 import SelectEmoji from "./SelectEmoji";
 import SelectFileButton from "./SelectFileButton";
 import SendButton from "./SendButton";
@@ -21,6 +22,7 @@ const SendMessageInput = ({
 
     const msg = {
       chatId: chatId,
+      senderName: currentUser.username,
       senderId: currentUser._id,
       text: currentText,
       messageType: "text"
@@ -37,14 +39,24 @@ const SendMessageInput = ({
       setMessages((prevMessage) => [...prevMessage, message]);
 
       // send message to socket.
-      const receiverId = slectedChat.members.find(
-        (id) => id !== currentUser._id
-      );
+      if (slectedChat.isGroupChat) {
+        // get groupname to send message to that group
+        const groupName = await axios.get(`${REACT_APP_SERVER_BASE_URL}/chat/group/id/${chatId}`)
+        // if chat is group chat then send message to that chat
 
-      setSendMessage({ ...message, receiverId });
+        // sending message to that group (TODO add to server)
+        // socket.emit("send-message-group", { ...message, receiverId });
+      } else {
+        // if chat is NOT group chat then send message to that chat
+        const receiverId = slectedChat.members.find(
+          (id) => id !== currentUser._id
+        );
+        // sendig message to socket by reciever id
+        socket.emit("send-message", { ...message, receiverId });
+      }
 
     } catch (error) {
-      console.log("[ERROR]", error.message);
+      console.log("[ERROR]", error);
     }
   };
   return (
