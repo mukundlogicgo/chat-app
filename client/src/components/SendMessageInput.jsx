@@ -40,7 +40,7 @@ const SendMessageInput = ({
         (id) => id !== currentUser._id
       );
       setSendMessage({ ...message, receiverId });
-      console.log("message sent successfully")
+ 
     } catch (error) {
       console.log("[ERROR]", error.message);
     }
@@ -52,6 +52,8 @@ const SendMessageInput = ({
         chatId={chatId}
         currentUser={currentUser}
         setMessages={setMessages}
+        slectedChat={slectedChat}
+        setSendMessage={setSendMessage}
       />
       <div className="flex-grow ml-4">
         <div className="relative w-full">

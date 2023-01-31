@@ -8,7 +8,9 @@ export const { REACT_APP_SERVER_BASE_URL, REACT_APP_SOCKET_SERVER_BASE_URL } =
 const SelectFileButton = ({
   setMessages,
   chatId,
-  currentUser
+  currentUser,
+  slectedChat,
+  setSendMessage
 }) => {
   const [files, setFiles] = useState()
 
@@ -16,6 +18,10 @@ const SelectFileButton = ({
 
   const handleFileUpload = async () => {
     try {
+      const receiverId = slectedChat.members.find(
+        (id) => id !== currentUser._id
+      );
+
       const formData = new FormData();
 
       for (let i = 0; i < files.length; i++) {
@@ -44,6 +50,9 @@ const SelectFileButton = ({
         );
 
         setMessages((prevMessage) => [...prevMessage, message]);
+
+        // send message to socket.
+        setSendMessage({ ...message, receiverId });
       });
 
       setFiles(null)
