@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 
 const Message = ({ isSelf, message, currentUser, slectedChatUser }) => {
-  // console.log(message.messageType)
 
   return (
 
@@ -16,7 +15,12 @@ const Message = ({ isSelf, message, currentUser, slectedChatUser }) => {
               }
             </div>
             <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
-              <div>{message.text}</div>
+              {
+                message.messageType === "mp3" && <audio src={message.text} controls autoPlay={false} />
+              }
+              {
+                message.messageType !== "mp3" && < div > {message.text}</div>
+              }
             </div>
           </div>
         </div>
@@ -29,11 +33,19 @@ const Message = ({ isSelf, message, currentUser, slectedChatUser }) => {
               }
             </div>
             <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-              <div>{message.text}</div>
+
+              {
+                message.messageType === "mp3" && <audio src={message.text} controls autoPlay={false} />
+              }
+              {
+                message.messageType !== "mp3" && < div > {message.text}</div>
+              }
+
             </div>
           </div>
         </div>
-      )}
+      )
+      }
     </>
   );
 };
