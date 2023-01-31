@@ -14,7 +14,7 @@ const { REACT_APP_SERVER_BASE_URL, REACT_APP_SOCKET_SERVER_BASE_URL } =
 
 export const socket = io(`${REACT_APP_SOCKET_SERVER_BASE_URL}`);
 
-const Home = ({ username }) => {
+const Home = ({ username, setUsername }) => {
   const [currentUser, setCurrentUser] = useState({});
   const [slectedChat, setSlectedChat] = useState({});
   const [slectedChatUser, setSlectedChatUser] = useState({});
@@ -123,7 +123,7 @@ const Home = ({ username }) => {
       <div className="flex h-screen w-full antialiased text-gray-800">
         <div className="flex flex-row h-full w-full overflow-x-hidden">
           <div className="flex flex-col py-8 pl-6 pr-2 w-64 bg-white flex-shrink-0">
-            <UserProfile username={username} />
+            <UserProfile username={username} setUsername={setUsername} />
             <AddNewUser currentUser={currentUser} setChats={setChats} />
 
             <div className="flex flex-col mt-8 overflow-y-auto">
