@@ -125,6 +125,7 @@ const Home = ({ username, setUsername }) => {
   // receiving message from group chat
   useEffect(() => {
     socket.on("receive-message-group", (data) => {
+      console.log(data)
       setMessages((prevMessages) => [
         ...prevMessages,
         {

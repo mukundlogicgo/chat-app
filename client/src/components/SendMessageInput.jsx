@@ -5,7 +5,6 @@ import SelectEmoji from "./SelectEmoji";
 import SelectFileButton from "./SelectFileButton";
 import SendButton from "./SendButton";
 
-
 const { REACT_APP_SERVER_BASE_URL } = process.env;
 
 const SendMessageInput = ({
@@ -20,10 +19,7 @@ const SendMessageInput = ({
   const handleSendMessage = async () => {
     if (!currentText) return;
 
-
-
     try {
-
       // send message to socket.
       if (slectedChat.isGroupChat) {
         const msg = {
@@ -32,7 +28,7 @@ const SendMessageInput = ({
           senderId: currentUser._id,
           text: currentText,
           isGroupChat: true,
-          messageType: "text"
+          messageType: "text",
         };
 
         const { data: message } = await axios.post(
@@ -43,13 +39,15 @@ const SendMessageInput = ({
         setCurrentText("");
         setMessages((prevMessage) => [...prevMessage, message]);
 
-
         // get groupname to send message to that group
-        const groupName = await axios.get(`${REACT_APP_SERVER_BASE_URL}/chat/group/id/${chatId}`)
-
+        const { data: group } = await axios.get(
+          `${REACT_APP_SERVER_BASE_URL}/chat/group/id/${chatId}`
+        );
         // sendig message to socket by groupname
-        socket.emit("send-message-group", { ...message, groupName });
-
+        socket.emit("send-message-group", {
+          ...message,
+          groupName: group.name,
+        });
       } else {
         const msg = {
           chatId: chatId,
@@ -57,7 +55,7 @@ const SendMessageInput = ({
           senderId: currentUser._id,
           text: currentText,
           isGroupChat: false,
-          messageType: "text"
+          messageType: "text",
         };
 
         const { data: message } = await axios.post(
@@ -72,11 +70,9 @@ const SendMessageInput = ({
           (id) => id !== currentUser._id
         );
 
-
         // sendig message to socket by reciever id
         socket.emit("send-message", { ...message, receiverId });
       }
-
     } catch (error) {
       console.log("[ERROR]", error);
     }
@@ -111,7 +107,6 @@ const SendMessageInput = ({
             currentText={currentText}
             setCurrentText={setCurrentText}
           />
-
         </div>
       </div>
 

@@ -22,7 +22,7 @@ io.on("connection", (socket) => {
     const { receiverId } = data;
     const user = activeUsers.find((user) => user.userId === receiverId);
     if (user) {
-      console.log("msg sent");
+      console.log("[INFO] msg sent");
       io.to(user.socketId).emit("receive-message", data);
     }
   });
@@ -32,9 +32,9 @@ io.on("connection", (socket) => {
     const { groupName } = data;
 
     if (groupName) {
-      console.log("msg sent to ", groupName);
+      console.log("[INFO] msg sent to ", groupName); 
       socket.join(groupName);
-      io.to(groupName).emit("receive-message-group", data);
+      socket.broadcast.to(groupName).emit("receive-message-group", data);
     }
   });
 
