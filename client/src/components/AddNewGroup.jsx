@@ -1,35 +1,36 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-const AddNewUser = ({ currentUser, setChats }) => {
-  const { REACT_APP_SERVER_BASE_URL } = process.env;
+const { REACT_APP_SERVER_BASE_URL } = process.env;
 
-  const [newUsername, setNewUsername] = useState("");
+const AddNewGroup = ({ currentUser, groups, setGroups }) => {
+  const [newGroupName, setNewGroupName] = useState("");
 
   const handleCreateNewChat = async (e) => {
     e.preventDefault();
-    if (!newUsername.trim()) {
-      alert("Username is required.");
+    if (!newGroupName.trim()) {
+      alert("Group name is required.");
       return;
     }
     try {
-      // check user is exist on db or not
-      const { data: user } = await axios.get(
-        `${REACT_APP_SERVER_BASE_URL}/user/name/${newUsername.trim()}`
+      // check group is exist on db or not
+      const { data: group } = await axios.get(
+        `${REACT_APP_SERVER_BASE_URL}/chat/group/name/${newGroupName}`
       );
 
-      // if user exist create chat
-      const { data: chat } = await axios.post(
-        `${REACT_APP_SERVER_BASE_URL}/chat`,
+      // add user to group
+      const { data: userAddedGroup } = await axios.post(
+        `${REACT_APP_SERVER_BASE_URL}/chat/group/user`,
         {
-          senderId: currentUser._id,
-          receiverId: user._id,
+          name: group.name,
+          userId: currentUser._id,
         }
       );
-      setNewUsername("");
-      setChats((prevChats) => [...prevChats, chat]);
+
+      setNewGroupName("");
+      setGroups((prevGroups) => [...prevGroups, userAddedGroup]);
     } catch (error) {
-      setNewUsername("");
+      setNewGroupName("");
       alert(error.response.data);
       console.log("[ERROR]", error.message);
     }
@@ -37,8 +38,8 @@ const AddNewUser = ({ currentUser, setChats }) => {
   return (
     <div className="flex w-full">
       <input
-        value={newUsername}
-        onChange={(e) => setNewUsername(e.target.value)}
+        value={newGroupName}
+        onChange={(e) => setNewGroupName(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             handleCreateNewChat(e);
@@ -47,7 +48,7 @@ const AddNewUser = ({ currentUser, setChats }) => {
         className=" w-90% shadow appearance-none border rounded w-full mt-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="user-input"
         type="text"
-        placeholder="Username"
+        placeholder="Groupname"
       />
       <button
         onClick={handleCreateNewChat}
@@ -60,4 +61,4 @@ const AddNewUser = ({ currentUser, setChats }) => {
   );
 };
 
-export default AddNewUser;
+export default AddNewGroup;

@@ -9,6 +9,7 @@ import UserProfile from "../components/UserProfile";
 import { io } from "socket.io-client";
 import { useRef } from "react";
 import GroupChat from "../components/GroupChat/GroupChat";
+import AddNewGroup from "../components/AddNewGroup";
 
 const { REACT_APP_SERVER_BASE_URL, REACT_APP_SOCKET_SERVER_BASE_URL } =
   process.env;
@@ -26,7 +27,7 @@ const Home = ({ username, setUsername }) => {
 
   const [chats, setChats] = useState([]);
 
-  const [groups, setGroups] = useState([])
+  const [groups, setGroups] = useState([]);
 
   const [messages, setMessages] = useState([]);
   const [sendMessage, setSendMessage] = useState({});
@@ -49,9 +50,7 @@ const Home = ({ username, setUsername }) => {
     currentUser?.username && socket.emit("new-user-add", currentUser._id);
 
     socket.on("get-users", (users) => {
-      setOnlineUsers(prevUsers => [
-        ...users
-      ]);
+      setOnlineUsers((prevUsers) => [...users]);
     });
 
     socket.on("connect_error", (err) => {
@@ -99,7 +98,7 @@ const Home = ({ username, setUsername }) => {
         const { data: groups } = await axios.get(
           `${REACT_APP_SERVER_BASE_URL}/chat/group/user/id/${currentUser._id}`
         );
-        setGroups(groups)
+        setGroups(groups);
       } catch (error) {
         console.log("[ERROR]", error?.response?.data);
       }
@@ -109,6 +108,7 @@ const Home = ({ username, setUsername }) => {
   // receiving message from user
   useEffect(() => {
     socket.on("receive-message", (data) => {
+      console.log("rcmsg", data);
       setMessages((prevMessages) => [
         ...prevMessages,
         {
@@ -125,7 +125,6 @@ const Home = ({ username, setUsername }) => {
   // receiving message from group chat
   useEffect(() => {
     socket.on("receive-message-group", (data) => {
-      console.log(data)
       setMessages((prevMessages) => [
         ...prevMessages,
         {
@@ -139,7 +138,6 @@ const Home = ({ username, setUsername }) => {
     };
   }, []);
 
-
   return (
     <div>
       <div className="flex h-screen w-full antialiased text-gray-800">
@@ -147,6 +145,11 @@ const Home = ({ username, setUsername }) => {
           <div className="flex flex-col py-8 pl-6 pr-2 w-64 bg-white flex-shrink-0">
             <UserProfile username={username} setUsername={setUsername} />
             <AddNewUser currentUser={currentUser} setChats={setChats} />
+            <AddNewGroup
+              currentUser={currentUser}
+              groups={groups}
+              setGroups={setGroups}
+            />
 
             <div className="flex flex-col mt-8 overflow-y-auto">
               <div className="flex flex-row items-center justify-between text-xs">
@@ -175,20 +178,21 @@ const Home = ({ username, setUsername }) => {
                       slectedChat={slectedChat}
                       setSlectedChat={setSlectedChat}
                       setSlectedChatUser={setSlectedChatUser}
+                      slectedChatUser={slectedChatUser}
                     />
                   );
                 })}
-                {
-                  groups.map((grp, index) => {
-                    return <GroupChat
+                {groups.map((grp, index) => {
+                  return (
+                    <GroupChat
                       key={index}
                       group={grp}
                       setChatId={setChatId}
                       setSlectedChat={setSlectedChat}
                       slectedChat={slectedChat}
                     />
-                  })
-                }
+                  );
+                })}
               </div>
             </div>
           </div>

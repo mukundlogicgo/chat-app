@@ -27,13 +27,31 @@ io.on("connection", (socket) => {
     }
   });
 
+  // join group
+  socket.on("join-group",(data)=>{
+    const {groupName} = data
+
+    if(!groupName) return
+    console.log(`[INFo] User join in '${groupName}'`)
+    socket.join(groupName)
+  })
+
+  // leave group
+  socket.on("leave-group",(data)=>{
+    const {groupName} = data
+
+    if(!groupName) return
+    socket.leave(groupName)
+    console.log(`[INFo] User leave from '${groupName}'`)
+    })
+
   // send message to a specific group
   socket.on("send-message-group", (data) => {
     const { groupName } = data;
-
+    
     if (groupName) {
       console.log("[INFO] msg sent to ", groupName); 
-      socket.join(groupName);
+      // socket.join(groupName);
       socket.broadcast.to(groupName).emit("receive-message-group", data);
     }
   });

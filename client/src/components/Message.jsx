@@ -5,9 +5,7 @@ const Message = ({ isSelf, message, currentUser, slectedChat }) => {
   const handleDownload = (fileUrl, filename) => {
     saveAs(fileUrl, filename)
   }
-
   return (
-
     <>
       {isSelf ? (
         <div className="col-start-1 col-end-8 p-3 rounded-lg">
@@ -59,7 +57,6 @@ const Message = ({ isSelf, message, currentUser, slectedChat }) => {
                 message.messageType !== "mp3" && message.messageType !== "png" &&
                 < div onClick={() => handleDownload(message.text, message.text.split("/")[message.text.split("/").length - 1])} className="cursor-pointer"> {message.text}</div>
               }
-
               {
                 message.messageType === "png" &&
                 <img
@@ -68,9 +65,7 @@ const Message = ({ isSelf, message, currentUser, slectedChat }) => {
                   src={message.text}
                   alt="image"
                 />
-
               }
-
             </div>
           </div>
         </div>

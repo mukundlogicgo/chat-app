@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { socket } from "../../pages/Home";
 
 const { REACT_APP_SERVER_BASE_URL } = process.env;
 
@@ -7,11 +8,11 @@ const GroupChat = ({
     group,
     setChatId,
     setSlectedChat,
-    slectedChat
 }) => {
     const handleOnGroupSelect = () => {
         setChatId(group._id)
         setSlectedChat(group)
+        socket.emit("join-group", {groupName:group.name})
     }
     return (
         <button
